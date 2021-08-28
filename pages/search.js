@@ -4,7 +4,7 @@ import { useRouter } from "next/dist/client/router"
 import {format} from "date-fns";
 import InfoCard from "../components/InfoCard";
 import Map from '../components/Map';
-import { useSession } from "next-auth/client";
+import { getSession, useSession } from "next-auth/client";
 import Login from "../components/Login";
 
 function Search({searchResults}) {
@@ -88,12 +88,16 @@ function Search({searchResults}) {
 export default Search
 
 
-export async function getServerSideProps(){
+export async function getServerSideProps(context){
     const searchResults= await fetch("https://links.papareact.com/isz").then(res=>res.json());
-  
+    
+    const session= await getSession(context);
+
     return{
       props:{
         searchResults,
+        session
+        
       }
     }
   }
